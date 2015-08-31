@@ -1,0 +1,40 @@
+Notes
+
+I chose to use R to tackle this assignment. In particular, I made use of the package ‘caret’. See all dependencies at the bottom of these notes.
+
+
+Approach
+
+1. Before attempting to build any models, I dove into the data: the most important aspects that I noticed immediately were (i) that all predictor variables were numerical AND (ii) that there was a class imbalance in the response variable (approx. 1/4 for “Barack Obama”). I also noticed that the response variable was binary.
+
+(i) above indicated that preprocessing all features via scaling and centering would be appropriate. (ii) above made me aware that I should use modelling techniques that are good at dealing with class imbalances, for examples ensemble methods such as random forests and boosting (one could also implement up-/down-sampling).
+
+2. In order to compare models, I needed to 1st decide on a metric of comparison: I chose ‘Accuracy’, because in predicting voting behaviour, we want to be as accurate as possible. (I am aware that ‘Accuracy’ may be problematic due to the class imbalance problem but a 25%/75% split isn’t too bad). I could also have used other metrics, such as ROC-curve or specificity.
+
+3. I wanted to select the most important features so that the others did not introduce unwanted noise into the modelling process. I did so using Lasso regression. Note: I also attempted to engineer new features (linear combinations, products, ratios of existing features) but this did not contribute to overall performance; I also attempted to remove correlated features but this did not contribute to overall performance.
+
+4. I wanted to implement as many models as possible and use the best one on the test data (with ‘Accuracy’ as metric, as discussed above): for each model, I preprocessed the data (scaling, centering and principal component signal extraction) and used repeated 10-fold cross validation to retreive the ‘Accuracy’ of each model (with error bars) for different meta-parameters.
+
+5. The models I chose were logistic regression, support vector machines, neural networks, random forests, stochastic gradient boosting and naive Bayes.
+
+6. Stochastic gradient boosting won with an accuracy of 84.8% (pretty good for out of the box!): as reported in performance.txt, “The final values used for the model were n.trees = 50, interaction.depth = 2 and shrinkage = 0.1.” Note that many of the models I tried had pretty similar accuracies.
+
+7. If I had more time, I would have definitely played around with (i) up-, down- and mixed sampling of the training data, (ii) using bagging techniques other than random forests, (iii) SMOTE to address the class imbalance problem in another manner and (iv) really working on feature engineering as this is the real key!
+
+
+
+Dependencies
+
+R libraries:
+library( glmnet )
+library( ggplot2 )
+library( caret )
+library( kernlab )
+library( klaR )
+library(doMC)
+
+
+
+HUGO BOWNE-ANDERSON
+07-14-2015
+

@@ -1,0 +1,27 @@
+Stochastic Gradient Boosting 
+
+1213 samples
+   9 predictor
+   2 classes: 'Barack Obama', 'Mitt Romney' 
+
+Pre-processing: centered, scaled, principal component signal extraction 
+Resampling: Cross-Validated (10 fold, repeated 10 times) 
+
+Summary of sample sizes: 1092, 1092, 1091, 1092, 1091, 1092, ... 
+
+Resampling results across tuning parameters:
+
+  interaction.depth  n.trees  Accuracy  Kappa  Accuracy SD  Kappa SD
+  1                   50      0.843     0.426  0.0243       0.1026  
+  1                  100      0.847     0.467  0.0258       0.0988  
+  1                  150      0.847     0.471  0.0274       0.1019  
+  2                   50      0.848     0.469  0.0248       0.0976  
+  2                  100      0.844     0.469  0.0263       0.0966  
+  2                  150      0.843     0.468  0.0262       0.0960  
+  3                   50      0.847     0.474  0.0256       0.0979  
+  3                  100      0.844     0.473  0.0280       0.0997  
+  3                  150      0.841     0.466  0.0280       0.0966  
+
+Tuning parameter 'shrinkage' was held constant at a value of 0.1
+Accuracy was used to select the optimal model using  the largest value.
+The final values used for the model were n.trees = 50, interaction.depth = 2 and shrinkage = 0.1. 
