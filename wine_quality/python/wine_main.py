@@ -25,8 +25,11 @@ X_white, y_white = data.load_white()
 #pairs(X_white, y_white, 'White wine')
 
 # Plot in 2d. Both have strong outliers. Consider removing. 
-plot2d(X_red, y_red, embedding='pca', title='Red wine')
-plot2d(X_red, y_red, embedding='isomap', title='Red wine')
-plot2d(X_red, y_red, embedding='tsne', title='Red wine')
+plot2d(X_red, y_red, scale=True, embedding='pca', title='Red wine')
+plot2d(X_red, y_red, scale=True, embedding='isomap', title='Red wine')
+plot2d(X_red, y_red, scale=True, embedding='lle', title='Red wine')
+plot2d(X_red, y_red, scale=True, embedding='spectral', title='Red wine')
+plot2d(X_red, y_red, scale=True, embedding='mds', title='Red wine')
+plot2d(X_red, y_red, scale=True, embedding='tsne', title='Red wine')
 
 #plot2d(X_white, y_white, 'White wine')
