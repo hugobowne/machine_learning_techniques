@@ -1,0 +1,9 @@
+.DS_Store
+.RData
+.Rhistory
+.project
+.pydevproject
+*.pickle
+*.pyc
+data/
+__init__.py
