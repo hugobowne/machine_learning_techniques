@@ -46,7 +46,7 @@ def yeo_johnson(x, lmbda=0 ):
     
 def dfyeo_johnson(df, lmbda=0 ):
     """
-    Performs a Yeo-Johnson Transformation on all columns (features of a dataframe)
+    Performs a Yeo-Johnson Transformation on all columns (features)of a dataframe
     """
     df_yj = pd.DataFrame(columns=df.columns)  #initialize empty data frame with same features as df
     for val in list(df.columns):
