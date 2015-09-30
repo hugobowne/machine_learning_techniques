@@ -23,23 +23,36 @@ def yeo_johnson(x, lmbda=0 ):
     Yeo, In-Kwon and Johnson, Richard (2000). A new family of power transformations
     to improve normality or symmetry. Biometrika, 87, 954-959.
     """
+    #The Yeo-Johnson Transform is defined differently for differing values of lambda
     if lmbda == 0:
+        #as transform is defined piecewise, I compute it using the sum of relational
+        #operators: for this reason, I 1st define the 2 functions
         A1 = np.log(abs(x+1)) 
-        A1[A1 == -np.inf] = 0
+        A1[A1 == -np.inf] = 0 #subtlety: if value = -inf , then term will not be used
+                              # BUT I do need to set it to 0 so that it IS unused below
         A2 = (np.power(1-x , 2) - 1)/2
-        A2[np.isnan(A2)] = 0
+        A2[np.isnan(A2)] = 0#subtlety: if value = NaN , then term will not be used
+                              # BUT I do need to set it to 0 so that it IS unused below
         x_yj = (x>=0)*A1 - (x<0)*A2
     elif lmbda == 2:
+        #as transform is defined piecewise, I compute it using the sum of relational
+        #operators: for this reason, I 1st define the 2 functions
         B1 = (np.power(x+1 , 2) - 1)/2
-        B1[np.isnan(B1)] = 0
+        B1[np.isnan(B1)] = 0#subtlety: if value = NaN , then term will not be used
+                              # BUT I do need to set it to 0 so that it IS unused below
         B2 = np.log(abs(1-x))
-        B2[B2==-np.inf] = 0
+        B2[B2==-np.inf] = 0#subtlety: if value = -inf , then term will not be used
+                              # BUT I do need to set it to 0 so that it IS unused below
         x_yj = (x>=0)*B1 - (x<0)*B2
     else:
+        #as transform is defined piecewise, I compute it using the sum of relational
+        #operators: for this reason, I 1st define the 2 functions
         C1 = (np.power(x+1 , lmbda) - 1)/lmbda
-        C1[np.isnan(C1)] = 0
+        C1[np.isnan(C1)] = 0#subtlety: if value = NaN , then term will not be used
+                              # BUT I do need to set it to 0 so that it IS unused below
         C2 = (np.power(1-x , 2-lmbda) - 1)/(2 - lmbda)
-        C2[np.isnan(C2)] = 0
+        C2[np.isnan(C2)] = 0#subtlety: if value = NaN , then term will not be used
+                              # BUT I do need to set it to 0 so that it IS unused below
         x_yj = (x>=0)*C1 + (x<0)*C2
 
     return x_yj
