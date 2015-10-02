@@ -7,9 +7,12 @@ from wine_explore import plot2d, pairs
 
 from time import time
 
-from matplotlib import pyplot as plt
-import numpy as np 
-import pandas as pd
+from sklearn.cross_validation import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.naive_bayes import GaussianNB
+# from matplotlib import pyplot as plt
+# import numpy as np 
+# import pandas as pd
 
 # Load data and preprocess (everything you don't put in the pipeline)
 data = WineData('../winequality-red.csv', '../winequality-white.csv')
@@ -31,22 +34,33 @@ print('Preprocesing. Done in %fs' % (time()-t0) )
 #	-> correlation: transform data or use regularized methods
 #	-> non-normal distributed featues: Box-Cox transform
 ###############################
-do_plot = True 
+do_plot = False 
 if (do_plot): 
 	plot2d(X_red, y_red, embedding='gallery', title='Red wine').show()#.savefig('../data/red_whine_2d_gallery.png')
 	plot2d(X_white, y_white, embedding='gallery', title='White wine').show()#.savefig('../data/white_whine_2d_gallery.png')
 	pairs(X_red, y_red, 'Red wine')
 	pairs(X_white, y_white, 'White wine')
 
-# ###############################
-# # Classification 
-# # Prepare data 
-# ###############################
-# #X = X_white
-# #y = y_white
-# X = X_red
-# y = y_red
-# X_train, X_holdout, y_train, y_holdout = train_test_split(X, y, random_state=23, test_size=0.2)
+###############################
+# Classification 
+# Prepare data 
+###############################
+#X = X_white
+#y = y_white
+X = X_red
+y = y_red
+X_train, X_holdout, y_train, y_holdout = train_test_split(X, y, random_state=23, test_size=0.2)
+
+###############################
+# Classify. 
+###############################
+from wine_classifier import WineClassifier
+from sklearn.pipeline import Pipeline
+
+pipeline = Pipeline([('scale', StandardScaler()), ('cls', GaussianNB())])
+param_grid = [] 
+cls_nb = WineClassifier(X_train, y_train, X_holdout, y_holdout, pipeline, param_grid)
+
 
 # ###############################
 # # What is a base level classification? 
