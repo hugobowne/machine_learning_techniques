@@ -87,15 +87,6 @@ def plot2d(X, y, scale=True, normalize=False, embedding='pca', title=''):
 	plt.colorbar(sc)
 	return plt
 
-def plot2d_gallery(self, X, y, scale=True): 
-	if (scale): 
-		scaler = StandardScaler()
-		X = scaler.fit_transform(X)
-
-	plt.figure(1)
-	plt.subplot(231)
-	plt.axes.append()
-
 def pairs(X, y, title): 
 	"""
 	Quick and dirty version of pairs. 
@@ -104,6 +95,4 @@ def pairs(X, y, title):
 	df[df.shape[1]] = y
 	plt.title(title + ' Pairwise plot')
 	axes = pd.tools.plotting.scatter_matrix(df, alpha=0.2)
-	#plt.tight_layout()
-	#plt.savefig('scatter_matrix.png')
-	plt.show() 
+	return plt
