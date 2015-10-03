@@ -10,7 +10,6 @@ from time import time
 from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.naive_bayes import GaussianNB
-# from matplotlib import pyplot as plt
 # import numpy as np 
 # import pandas as pd
 
@@ -60,6 +59,7 @@ from sklearn.pipeline import Pipeline
 pipeline = Pipeline([('scale', StandardScaler()), ('cls', GaussianNB())])
 param_grid = [] 
 cls_nb = WineClassifier(X_train, y_train, X_holdout, y_holdout, pipeline, param_grid)
+cls_nb.train(verbose=2, n_jobs=-1)
 
 
 # ###############################
