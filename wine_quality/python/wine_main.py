@@ -4,14 +4,18 @@ __email__ = "fernando at carrillo.at"
 from wine_data import WineData
 from wine_preprocesser import WinePreprocesser
 from wine_explore import plot2d, pairs
+from wine_classifier import WineClassifier
 
 from time import time
+import numpy as np 
 
+from sklearn.pipeline import Pipeline
 from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.naive_bayes import GaussianNB
-# import numpy as np 
-# import pandas as pd
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import LinearSVC
+from sklearn.linear_model import LogisticRegression
 
 # Load data and preprocess (everything you don't put in the pipeline)
 data = WineData('../winequality-red.csv', '../winequality-white.csv')
@@ -51,63 +55,29 @@ y = y_red
 X_train, X_holdout, y_train, y_holdout = train_test_split(X, y, random_state=23, test_size=0.2)
 
 ###############################
-# Classify. 
+# Classify on untransformed dataset. 
 ###############################
-from wine_classifier import WineClassifier
-from sklearn.pipeline import Pipeline
-
 pipeline = Pipeline([('scale', StandardScaler()), ('cls', GaussianNB())])
-param_grid = [] 
-cls_nb = WineClassifier(X_train, y_train, X_holdout, y_holdout, pipeline, param_grid)
-cls_nb.train(verbose=2, n_jobs=-1)
+cls_nb = WineClassifier(X_train, y_train, X_holdout, y_holdout, pipeline, param_grid=[])
+cls_nb.train(verbose=1, n_jobs=-1)
 cls_nb.classification_report()
 
+pipeline = Pipeline([('scale', StandardScaler()), ('nn', KNeighborsClassifier())])
+cls_nn = WineClassifier(X_train, y_train, X_holdout, y_holdout, pipeline, param_grid={'nn__n_neighbors': [1, 2, 4, 8, 32, 64]})
+cls_nn.train(verbose=1, n_jobs=-1)
+cls_nn.classification_report()
 
-# ###############################
-# # What is a base level classification? 
-# # Not sure what to use, i) nearest neighbor classification, ii) logisitic regression, iii) linear SVM iv) Naive Bayes ? 
-# # Best score: Red wine: NB: 0.55 (Gaussian), NN: 0.63 (n_neighbors=1), SVC: 0.57 (C=10), Logisitic regression 0.59 (C=1)
-# # Best score: White wine: NB: 0.43 (Gaussian), NN: 0.63 (n_neighbors=1), SVC: 0.53 (C=10), Logisitic regression 0.54 (C=0.1)
-# ###############################
-# from sklearn.metrics import accuracy_score
-# highest_class = pd.Series(y_red).value_counts().order().index[0]
-# #print( accuracy_score((np.repeat(highest_class, len(y_red), y_red))) )
+pipeline = Pipeline([('scale', StandardScaler()), ('svc', LinearSVC())])
+cls_svc = WineClassifier(X_train, y_train, X_holdout, y_holdout, pipeline, param_grid={'svc__C': 10. ** np.arange(-3, 4)})
+cls_svc.train(verbose=1, n_jobs=-1)
+cls_svc.classification_report()
 
-# def train_plot_single_param_grid(steps, param_grid, name): 
-# 	"""
-# 	Train model and plot the learning curve. 
-# 	This works only if there is one parameter to optimize over. 
-# 	"""
-# 	clf = Pipeline(steps)
-# 	grid_search = GridSearchCV(clf, param_grid=param_grid, cv=5, verbose=1, n_jobs=2, scoring='accuracy').fit(X_train, y_train)
-# 	print( ('Best score %s of estimator %s') % (grid_search.best_score_, grid_search.best_estimator_))
-# 	plt.figure(1)
-# 	plt.title("Learning curve " + name)
-# 	plt.plot([c.mean_validation_score for c in grid_search.grid_scores_], label="validation error")
-# 	plt.show()
-# 	return grid_search.best_estimator_
+pipeline = Pipeline([('scale', StandardScaler()), ('logistic', LogisticRegression(multi_class='multinomial', solver='lbfgs'))])
+cls_log = WineClassifier(X_train, y_train, X_holdout, y_holdout, pipeline, param_grid={'logistic__C': 10. ** np.arange(-3, 4)})
+cls_log.train(verbose=1, n_jobs=1) # Not sure why, but multi_class logisitc regression crashes with multithreading. 
+cls_log.classification_report()
 
-# do_base_rate = False
-# if (do_base_rate): 
-# 	steps = [('scale', StandardScaler()), ('nb', GaussianNB())]
-# 	scores = cross_validation.cross_val_score(Pipeline(steps), X_train, y_train, cv=5)
-# 	print(('Best score %s') % (scores.mean()))
-
-# 	steps = [('scale', StandardScaler()), ('nn', KNeighborsClassifier())]
-# 	param_grid = {'nn__n_neighbors': [1, 2, 4, 8, 32, 64]}
-# 	clf = train_plot_single_param_grid(steps, param_grid, 'Nearest Neighbor')
-# 	evaluate(clf, X_holdout, y_holdout)
-
-# 	steps = [('scale', StandardScaler()), ('svc', LinearSVC())]
-# 	param_grid = {'svc__C': 10. ** np.arange(-3, 4)}
-# 	clf = train_plot_single_param_grid(steps, param_grid, 'Linear SVC')
-# 	evaluate(clf, X_holdout, y_holdout)
-
-# 	steps = [('scale', StandardScaler()), ('logistic', LogisticRegression(multi_class='multinomial', solver='lbfgs'))]
-# 	param_grid = {'logistic__C': 10. ** np.arange(-3, 4)}
-# 	clf = train_plot_single_param_grid(steps, param_grid, 'Logistic')
-# 	evaluate(clf, X_holdout, y_holdout)
-
+# 	
 # 	steps = [('scale', StandardScaler()), ('trans', PCA()), ('nn', KNeighborsClassifier())]
 # 	param_grid = {'trans__n_components': np.arange(2,X_train.shape[1]+1, 2), 'nn__n_neighbors': [1, 2, 4, 8, 32, 64]}
 # 	clf = train_plot_single_param_grid(steps, param_grid, 'Nearest Neighbor')

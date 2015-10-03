@@ -25,11 +25,11 @@ class WineClassifier(object):
 		Train the classifier by grid search 
 		"""
 		if len(self.param_grid) != 0: 
-			self.grid_search = GridSearchCV(self.pipeline, param_grid=self.param_grid, cv=cv, verbose=verbose, n_jobs=n_jobs, scoring=scoring)
-			self.grid_search.fit(self.X_train, self.y_train)
+			grid_search = GridSearchCV(self.pipeline, param_grid=self.param_grid, cv=cv, verbose=verbose, n_jobs=n_jobs, scoring=scoring)
+			grid_search.fit(self.X_train, self.y_train)
 			if verbose > 1: 
 				print( ('Best score %s with parameters %s') % (grid_search.best_score_, grid_search.best_params_))
-			self.pipeline = self.grid_search.best_estimator_
+			self.pipeline = grid_search.best_estimator_
 		else: 
 			if verbose > 1:
 				scores = cross_val_score(self.pipeline, self.X_train, self.y_train, cv=cv)
