@@ -60,6 +60,7 @@ pipeline = Pipeline([('scale', StandardScaler()), ('cls', GaussianNB())])
 param_grid = [] 
 cls_nb = WineClassifier(X_train, y_train, X_holdout, y_holdout, pipeline, param_grid)
 cls_nb.train(verbose=2, n_jobs=-1)
+cls_nb.classification_report()
 
 
 # ###############################
@@ -85,25 +86,6 @@ cls_nb.train(verbose=2, n_jobs=-1)
 # 	plt.plot([c.mean_validation_score for c in grid_search.grid_scores_], label="validation error")
 # 	plt.show()
 # 	return grid_search.best_estimator_
-
-# def evaluate(classifier, valid_X, valid_y):
-# 	"""
-# 	Tests model on validation data set
-
-# 	Parameters
-# 	----------
-
-# 	classifier : classifier
-# 		Learned model 
-
-# 	valid_X : array 
-# 		Text to classify 
-
-# 	valid_y : array 
-# 		Label of text
-# 	"""
-# 	predicted = classifier.predict(valid_X)
-# 	print(metrics.classification_report(valid_y, predicted))
 
 # do_base_rate = False
 # if (do_base_rate): 

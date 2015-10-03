@@ -3,6 +3,7 @@ __email__ = "fernando at carrillo.at"
 
 from sklearn.grid_search import GridSearchCV
 from sklearn.cross_validation import cross_val_score
+from sklearn.metrics import classification_report
 
 class WineClassifier(object):
 	"""
@@ -34,6 +35,14 @@ class WineClassifier(object):
 				scores = cross_val_score(self.pipeline, self.X_train, self.y_train, cv=cv)
 				print(('Best score %s') % (scores.mean()))
 			self.pipeline.fit(self.X_train, self.y_train)
+
+	def classification_report(self, print_stdout=True):
+		"""
+		Valid classifier on validation set. 
+		"""
+		report = classification_report(self.y_valid, self.pipeline.predict(self.X_valid))
+		if print_stdout: print(report)
+		return(report)
 
 
 
