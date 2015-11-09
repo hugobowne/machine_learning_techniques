@@ -20,7 +20,7 @@ class WineClassifier(object):
 		self.pipeline = pipeline
 		self.param_grid = param_grid
 
-	def train(self, verbose=1, n_jobs=-1, scoring='accuracy', cv=5): 
+	def train(self, verbose=1, n_jobs=-1, scoring='accuracy', cv=10): 
 		"""
 		Train the classifier by grid search 
 		"""
